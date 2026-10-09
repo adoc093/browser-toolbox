@@ -15,14 +15,14 @@ function render() {
   $('batch-integrity').textContent = conflict ? '批次存在冲突，请清空全部后重新导入同一批二维码。' : batch.complete ? `已收齐 ${batch.size} 张二维码，可以导出。` : batch.size ? `还缺第 ${batch.missing.join('、')} 张二维码。` : '导入后自动检查批次和缺失编号。';
   $('batch-empty').hidden = entries.length > 0;
   $('account-list').replaceChildren();
-  entries.slice(0, 100).forEach((entry, index) => {
+  entries.forEach((entry, index) => {
     const row = document.createElement('article'); row.className = 'account-row';
     const title = document.createElement('strong'); title.textContent = `${index + 1}. ${entry.name || '未提供名称'}`;
     const info = document.createElement('p'); info.textContent = `${entry.issuer || '未提供服务'} · ${entry.type.toUpperCase()} · ${entry.digits} 位 · ${entry.algorithm}`;
     const key = document.createElement('code'); key.textContent = reveal ? entry.secret : '••••••••••••••••';
     row.append(title, info, key); $('account-list').append(row);
   });
-  $('preview-note').textContent = entries.length > 100 ? '预览显示前 100 个账号，下载文件包含全部账号。' : '';
+  $('preview-note').textContent = entries.length ? `已显示全部 ${entries.length} 个账号，下载文件包含同样的 ${entries.length} 条记录。` : '';
 }
 function log(message, error = false) {
   const row = document.createElement('li'); row.textContent = message;

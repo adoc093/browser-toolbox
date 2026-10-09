@@ -80,3 +80,19 @@ test('base32 export round-trips arbitrary secret bytes', async () => {
   const { decodeBase32 } = await import('../totp-core.js');
   for (let n = 1; n < 80; n++) { const bytes = Uint8Array.from({ length: n }, (_, i) => (i * 37 + n) % 256); assert.deepEqual(decodeBase32(encodeBase32(bytes)), bytes); }
 });
+test('12-part batch exports every one of 112 accounts, including the final record', () => {
+  const batch = new MigrationBatch();
+  for (let i = 11; i >= 0; i--) {
+    const part = parseMigration(fixture(i, 12));
+    part.entries = Array.from({ length: i === 11 ? 2 : 10 }, (_, j) => ({ ...part.entries[0], name: `Demo:account-${i * 10 + j + 1}` }));
+    batch.add(part);
+  }
+  assert.equal(batch.entries.length, 112);
+  assert.equal(batch.entries[111].name, 'Demo:account-112');
+  for (const format of ['txt', 'md']) {
+    const content = exportBatch(batch, format);
+    assert.match(content, /账号数：112/);
+    assert.equal((content.match(/^名称：/gm) || []).length, 112);
+    assert.match(content, /名称：Demo:account-112/);
+  }
+});
