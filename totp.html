@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="在浏览器本地生成 TOTP 动态验证码。密钥不上传、不保存。">
+  <title>小工具箱 · 动态验证码</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="totp.js"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./"><span class="brand-mark">＋</span>小工具箱</a><span class="local-badge"><i></i>只在你的浏览器里运行</span></header>
+  <main>
+    <nav aria-label="工具"><span class="nav-label">我的工具</span><a href="./"><span aria-hidden="true">▦</span> 二维码识别 <span class="arrow">↗</span></a><a class="active" aria-current="page" href="totp.html"><span aria-hidden="true">◷</span> 动态验证码 <span class="arrow">↗</span></a><p class="nav-note">把重复的小事<br>交给小工具。</p></nav>
+    <section class="workspace">
+      <div class="intro"><span class="eyebrow">02 / TOTP GENERATOR</span><h1>下一步，拿到验证码。</h1><p>粘贴验证器密钥，生成可以填进网站的动态验证码。</p></div>
+      <div class="tool-grid">
+        <section class="input-card" aria-labelledby="input-title">
+          <div class="card-heading"><h2 id="input-title">输入密钥</h2><span class="step">02</span></div>
+          <div class="secret-heading"><label for="totp-secret">验证器密钥 / Setup Key</label><button id="toggle-secret" class="quiet" type="button" aria-pressed="false">显示</button></div>
+          <input id="totp-secret" class="key-input" type="password" placeholder="粘贴刚才复制的密钥" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="4096">
+          <p class="file-note">也支持粘贴完整的 otpauth://totp 链接。<br>密钥可从「二维码识别」栏目复制。</p>
+          <button id="generate" class="primary" type="button">生成验证码 <span aria-hidden="true">↗</span></button>
+          <details class="advanced"><summary>高级设置 · 通常不用修改</summary><div class="settings"><label for="digits">验证码位数<select id="digits"><option value="6">6 位</option><option value="8">8 位</option></select></label><label for="period">更新周期（秒）<input id="period" type="number" min="5" max="300" step="1" value="30"></label><label for="algorithm">算法<select id="algorithm"><option value="SHA-1">SHA-1</option><option value="SHA-256">SHA-256</option><option value="SHA-512">SHA-512</option></select></label></div><p class="file-note">完整链接中的参数优先于这些设置。</p></details>
+        </section>
+        <section class="result-card" aria-labelledby="result-title">
+          <div class="card-heading"><h2 id="result-title">当前验证码</h2><button id="clear-totp" class="quiet" type="button">清空</button></div>
+          <div id="totp-empty" class="empty"><span aria-hidden="true">◷</span><h3>验证码会出现在这里</h3><p>粘贴密钥，点击生成。<br>到期自动更新。</p></div>
+          <div id="totp-result" hidden><span id="totp-settings" class="result-tag"></span><output id="code" class="code" aria-label="动态验证码"></output><div class="countdown"><span>距离更新</span><strong id="remaining"></strong></div><progress id="lifetime" max="30" value="30" aria-label="验证码剩余有效时间"></progress><button id="copy-code" class="primary" type="button" disabled>复制验证码 <span aria-hidden="true">↗</span></button><p class="clipboard-note">复制的是验证码，直接粘贴到网站验证框。</p></div>
+          <p id="totp-status" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+      <footer class="privacy"><span class="privacy-icon" aria-hidden="true">✓</span><div><strong>密钥与验证码，只在当前页面临时使用。</strong><p>不上传、不保存。离开、刷新或清空后移除。验证码依赖设备时间，请开启系统自动校时；已复制的内容由系统剪贴板管理。</p></div></footer>
+      <div class="bottomline"><span>少一点重复，多一点时间。</span><span>小工具箱 / 浏览器本地处理</span></div>
+    </section>
+  </main>
+</body>
+</html>
