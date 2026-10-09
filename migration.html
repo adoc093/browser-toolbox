@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="本地解析 Google Authenticator 批量迁移二维码，检查批次完整性，导出 TXT 或 Markdown。">
+  <title>小工具箱 · 验证器批量导出</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="vendor/jsQR.js" defer></script>
+  <script src="vendor/zxing-reader.js" defer></script>
+  <script type="module" src="migration.js"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./"><span class="brand-mark">＋</span>小工具箱</a><span class="local-badge"><i></i>只在你的浏览器里运行</span></header>
+  <main>
+    <nav aria-label="工具"><span class="nav-label">我的工具</span><a href="./"><span aria-hidden="true">▦</span> 二维码识别 <span class="arrow">↗</span></a><a href="totp.html"><span aria-hidden="true">◷</span> 动态验证码 <span class="arrow">↗</span></a><a class="active" aria-current="page" href="migration.html"><span aria-hidden="true">↓</span> 验证器批量导出 <span class="arrow">↗</span></a><p class="nav-note">把重复的小事<br>交给小工具。</p></nav>
+    <section class="workspace">
+      <div class="intro"><span class="eyebrow">03 / AUTHENTICATOR EXPORT</span><h1>一次带走，整批账号。</h1><p>导入 Google 验证器迁移二维码，收齐后下载 TXT 或 Markdown。</p></div>
+      <div class="tool-grid">
+        <section class="input-card" aria-labelledby="input-title">
+          <div class="card-heading"><h2 id="input-title">导入迁移二维码</h2><span class="step">03</span></div>
+          <label class="dropzone" id="batch-dropzone" tabindex="0" role="button" aria-label="选择多张迁移二维码图片"><span class="qr-art" aria-hidden="true">▦</span><strong>整批图片，一起拖进来</strong><span>可多选图片 · 可分次添加 · 可粘贴截图</span><span class="choose">选择多张图片 <span aria-hidden="true">↗</span></span></label>
+          <input id="batch-files" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp" multiple hidden>
+          <p class="file-note">同一次导出的所有二维码都要导入。<br>例如手机显示「共 12 个」，就需要收齐 12 张。<br>每张图片一枚二维码，最大 20 MB；每次最多 100 张。</p>
+          <details><summary>已经有迁移链接？</summary><label class="sr-only" for="batch-links">迁移链接，一行一条</label><textarea id="batch-links" rows="4" maxlength="400000" placeholder="otpauth-migration://offline?data=…&#10;一行一条，可一次粘贴多条" autocomplete="off" spellcheck="false"></textarea><button id="import-links" class="secondary" type="button">导入链接</button></details>
+          <ol id="import-log" class="import-log" aria-label="导入记录"></ol>
+          <p id="batch-status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="result-card" aria-labelledby="result-title">
+          <div class="card-heading"><h2 id="result-title">账号与导出</h2><button id="clear-batch" class="quiet" type="button">清空全部</button></div>
+          <div class="batch-stats"><div><strong id="part-count">0 / 0</strong><span>张二维码</span></div><div><strong id="account-count">0</strong><span>个账号</span></div></div>
+          <p id="batch-integrity" class="integrity">导入后自动检查批次和缺失编号。</p>
+          <div class="export-actions"><button id="export-txt" class="primary" type="button" disabled>下载 TXT ↓</button><button id="export-md" class="primary" type="button" disabled>下载 Markdown ↓</button></div>
+          <p class="file-note">文件包含名称、服务、密钥、算法及恢复链接。<br>只有点击下载才保存到你的设备；文件为明文，请妥善保管。</p>
+          <div class="card-heading preview-heading"><h2>账号预览</h2><button id="show-keys" class="quiet" type="button" aria-pressed="false">显示密钥</button></div>
+          <div id="batch-empty" class="empty batch-empty"><h3>账号会出现在这里</h3><p>图片顺序不限，重复二维码会自动跳过。</p></div>
+          <div id="account-list" class="account-list"></div>
+          <p id="preview-note" class="file-note"></p>
+        </section>
+      </div>
+      <footer class="privacy"><span class="privacy-icon" aria-hidden="true">✓</span><div><strong>网页不保存，下载文件由你保管。</strong><p>二维码和密钥只在页面内存处理，不上传。清空、刷新或离开后移除；下载完成的 TXT / MD 文件会保留在设备上。</p></div></footer>
+      <div class="bottomline"><span>少一点重复，多一点时间。</span><span>小工具箱 / 浏览器本地处理</span></div>
+    </section>
+  </main>
+</body>
+</html>
